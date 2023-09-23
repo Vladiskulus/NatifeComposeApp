@@ -60,4 +60,8 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.ok.http)
+    implementation(libs.glide)
 }
