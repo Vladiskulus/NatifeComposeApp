@@ -1,20 +1,27 @@
 package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
-import androidx.compose.foundation.*
+import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
+import coil.ImageLoader
+import coil.compose.SubcomposeAsyncImage
+import coil.decode.*
+
+import kotlinx.coroutines.Dispatchers
+
 @Composable
 fun GridItem(
-    image: ImageBitmap,
+    urlImage: String,
     onDeleteClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val dispatcher = Dispatchers.IO.limitedParallelism(5)
     Card(
         modifier = Modifier
 
@@ -26,11 +33,32 @@ fun GridItem(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
+            SubcomposeAsyncImage(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .size(200.dp)
                     .align(Alignment.CenterHorizontally),
-                bitmap = image,
+                model = urlImage,
+                loading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ){
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                },
+                imageLoader = ImageLoader.Builder(context)
+                    .dispatcher(dispatcher)
+                    .components {
+                        if (Build.VERSION.SDK_INT >= 28) {
+                            add(ImageDecoderDecoder.Factory())
+                        } else {
+                            add(GifDecoder.Factory())
+                        }
+                    }
+                    .respectCacheHeaders(false)
+                    .build(),
                 contentDescription = null
             )
             IconButton(

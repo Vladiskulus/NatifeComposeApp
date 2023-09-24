@@ -1,34 +1,36 @@
 package ua.vn.iambulance.natifeapp.domain.view_models
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import ua.vn.iambulance.natifeapp.data.GiphyRepository
 import ua.vn.iambulance.natifeapp.data.entity.GiphyData
 import ua.vn.iambulance.natifeapp.data.entity.GiphyResponse
 import ua.vn.iambulance.natifeapp.data.pagination.PaginationClient
 import ua.vn.iambulance.natifeapp.data.retrofit.RetrofitClient
+import ua.vn.iambulance.natifeapp.domain.GetGiphyUseCase
 
 class MainViewModel: ViewModel() {
 
-    val paginationClient = PaginationClient()
+    private val paginationClient = PaginationClient()
+    private val getGiphyUseCase: GetGiphyUseCase = GetGiphyUseCase(GiphyRepository(RetrofitClient().apiService))
 
-    val gifsLiveData: MutableLiveData<GiphyResponse> = MutableLiveData()
+    val gifsLiveData: MutableLiveData<List<GiphyData>> = MutableLiveData()
 
-//    fun getNextPage(offset: Int) {
-//
-//        viewModelScope.launch {
-//            response = paginationClient.getNextPage(offset)
-//            gifsLiveData.postValue(response)
-//        }
-//
-//    }
+    private val _giphyStateFlow = MutableStateFlow(emptyList<GiphyData>())
+    val giphyStateFlow get() = _giphyStateFlow as StateFlow<List<GiphyData>>
 
-//    val gifsFlow = flow {
-//        emit(paginationClient.getNextPage(0).body()!!.data)
-//        var offset = 25
-//        while (true) {
-//            val response = paginationClient.getNextPage(offset)
-//            emit(response.body()!!.data)
-//            offset += 25
-//        }
-//    }
+    suspend fun getGiphy(){
+        _giphyStateFlow.value = getGiphyUseCase()
+    }
+
+
+    fun openValue(){
+        viewModelScope.launch(Dispatchers.IO) {
+            gifsLiveData.postValue(paginationClient.getNextPage(0))
+        }
+    }
 }

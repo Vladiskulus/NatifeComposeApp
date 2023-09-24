@@ -3,21 +3,27 @@ package ua.vn.iambulance.natifeapp.presenter.ui.compose
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.*
-import ua.vn.iambulance.natifeapp.presenter.entity.Image
+import ua.vn.iambulance.natifeapp.data.entity.GiphyData
 
 @Composable
 fun LinearList(
-    items: List<Image>,
+    data: List<GiphyData>,
+    state: MutableState<Int>,
     onDeleteItem: (Int) -> Unit
 ) {
+    val currentState = rememberSaveable {
+        mutableStateOf(state)
+    }
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
     ) {
-        itemsIndexed(items) { index, item ->
+        itemsIndexed(data) { index, item ->
             LinearItem(
-                image = item.image.asImageBitmap(),
+                urlImage = item.images.original.url ?: "https://media4.giphy.com/media/k93vubaq1hKMurHkKs/giphy.gif?cid=035fffcfpla5mg6zrpj0hsamo0fu7rvthzze4xb8p0yc9ob3&ep=v1_gifs_trending&rid=giphy.gif&ct=g",
                 onDeleteClick = { onDeleteItem(index) }
             )
         }

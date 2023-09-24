@@ -11,25 +11,26 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.*
+import coil.compose.SubcomposeAsyncImage
 
 @Composable
 fun LinearItem(
-    image: ImageBitmap,
+    urlImage: String,
     onDeleteClick: () -> Unit
 ){
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
+        SubcomposeAsyncImage(
+            model = urlImage,
             modifier = Modifier.size(50.dp),
-            bitmap = image,
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))
-
         Spacer(modifier = Modifier.width(8.dp))
         Button(
             modifier = Modifier.size(30.dp),
@@ -39,3 +40,4 @@ fun LinearItem(
         }
     }
 }
+
