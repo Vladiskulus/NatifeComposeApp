@@ -1,4 +1,4 @@
-package ua.vn.iambulance.natifeapp.ui.theme
+package ua.vn.iambulance.natifeapp.presenter.ui.theme
 
 import android.app.Activity
 import android.os.Build

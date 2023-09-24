@@ -1,4 +1,4 @@
-package ua.vn.iambulance.natifeapp.ui.compose
+package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -7,11 +7,9 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.*
-import androidx.compose.ui.tooling.preview.Preview
 import ua.vn.iambulance.natifeapp.R
-import ua.vn.iambulance.natifeapp.ui.theme.PurpleGrey80
+import ua.vn.iambulance.natifeapp.presenter.ui.theme.PurpleGrey80
 
 @Composable
 fun TopToolbar(

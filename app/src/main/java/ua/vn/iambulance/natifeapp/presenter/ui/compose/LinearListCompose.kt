@@ -1,15 +1,16 @@
-package ua.vn.iambulance.natifeapp.ui.compose
+package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
-import ua.vn.iambulance.natifeapp.data.entity.ImageItemEntity
+import ua.vn.iambulance.natifeapp.domain.entity.ImageItemEntity
+import ua.vn.iambulance.natifeapp.presenter.entity.Image
 
 @Composable
 fun LinearList(
-    items: List<ImageItemEntity>,
+    items: List<Image>,
     onDeleteItem: (Int) -> Unit
 ) {
     LazyColumn(
@@ -18,8 +19,6 @@ fun LinearList(
         itemsIndexed(items) { index, item ->
             LinearItem(
                 image = item.image.asImageBitmap(),
-                header = item.textHeader,
-                description = item.textDescription,
                 onDeleteClick = { onDeleteItem(index) }
             )
         }

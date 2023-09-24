@@ -1,4 +1,4 @@
-package ua.vn.iambulance.natifeapp.data
+package ua.vn.iambulance.natifeapp.data.helper
 
 import retrofit2.http.GET
 

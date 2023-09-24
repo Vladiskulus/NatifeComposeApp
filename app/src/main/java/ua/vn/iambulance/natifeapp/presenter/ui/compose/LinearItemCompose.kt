@@ -1,4 +1,4 @@
-package ua.vn.iambulance.natifeapp.ui.compose
+package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
 
 import androidx.compose.foundation.*
@@ -15,8 +15,6 @@ import androidx.compose.ui.unit.*
 @Composable
 fun LinearItem(
     image: ImageBitmap,
-    header: String,
-    description: String,
     onDeleteClick: () -> Unit
 ){
     Row(
@@ -31,19 +29,7 @@ fun LinearItem(
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(
-                text = header,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = description,
-                fontSize = 12.sp
-            )
-        }
+
         Spacer(modifier = Modifier.width(8.dp))
         Button(
             modifier = Modifier.size(30.dp),

@@ -1,4 +1,4 @@
-package ua.vn.iambulance.natifeapp.ui.compose
+package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -9,7 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.*
 
 @Composable
 fun FullScreenImage(
