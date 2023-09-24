@@ -1,4 +1,4 @@
-package ua.vn.iambulance.natifeapp.data
+package ua.vn.iambulance.natifeapp.extension
 
 import android.content.Context
 import java.io.ByteArrayInputStream

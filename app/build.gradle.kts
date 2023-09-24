@@ -66,4 +66,9 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.ok.http)
     implementation(libs.glide)
+    implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.dagger.hilt.compose)
+
+
 }
