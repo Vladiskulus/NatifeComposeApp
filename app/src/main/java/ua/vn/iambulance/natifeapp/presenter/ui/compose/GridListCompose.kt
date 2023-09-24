@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
-import ua.vn.iambulance.natifeapp.domain.entity.ImageItemEntity
 import ua.vn.iambulance.natifeapp.presenter.entity.Image
 
 

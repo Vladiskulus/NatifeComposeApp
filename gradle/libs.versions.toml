@@ -7,9 +7,10 @@ activity-compose = "1.7.2"
 compose-bom = "2023.03.00"
 retrofit = "2.9.0"
 converter-gson = "2.9.0"
-logging-interceptor = "4.9.1"
+okhttp = "4.9.1"
 glide = "4.12.0"
-dagger-hilt = "2.38.1"
+dagger-hilt = "2.48"
+dagger-hilt-plugin = "2.48"
 hilt-compose = "1.0.0"
 
 [libraries]
@@ -25,10 +26,14 @@ ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
 retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converter-gson" }
-ok-http = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging-interceptor"}
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "converter-gson" }
+ok-http = {group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp"}
+ok-http-logging-interceptor = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp"}
+
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-hilt"}
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger-hilt"}
+
 dagger-hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-compose"}
 
 [plugins]
@@ -36,3 +41,4 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize",  version.ref = "kotlin"  }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+dagger-hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt.plugin)
 }
 
 android {
@@ -48,6 +49,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    hilt {
+        enableAggregatingTask = true
+    }
 }
 
 dependencies {
@@ -64,7 +68,9 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.retrofit2)
     implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.converter.moshi)
     implementation(libs.ok.http)
+    implementation(libs.ok.http.logging.interceptor)
     implementation(libs.glide)
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)

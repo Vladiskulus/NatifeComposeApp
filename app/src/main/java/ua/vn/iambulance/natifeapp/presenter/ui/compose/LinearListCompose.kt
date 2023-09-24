@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
-import ua.vn.iambulance.natifeapp.domain.entity.ImageItemEntity
 import ua.vn.iambulance.natifeapp.presenter.entity.Image
 
 @Composable

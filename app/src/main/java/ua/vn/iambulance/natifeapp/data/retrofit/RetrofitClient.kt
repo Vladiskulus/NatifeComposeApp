@@ -1,14 +1,14 @@
-package ua.vn.iambulance.natifeapp.data.helper
+package ua.vn.iambulance.natifeapp.data.retrofit
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ua.vn.iambulance.natifeapp.data.REQUEST_URL
 
-object RetrofitClient {
-    private const val BASE_URL = "https://api.giphy.com/v1/gifs/"
+class RetrofitClient {
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(REQUEST_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
