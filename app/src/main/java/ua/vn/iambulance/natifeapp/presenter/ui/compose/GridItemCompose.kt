@@ -23,7 +23,7 @@ fun GridItem(
     val context = LocalContext.current
     val dispatcher = Dispatchers.IO.limitedParallelism(5)
     Card(
-        modifier = Modifier
+        modifier = Modifier.padding(10.dp)
 
     ) {
         Column(

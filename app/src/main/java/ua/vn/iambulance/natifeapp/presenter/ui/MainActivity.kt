@@ -1,6 +1,5 @@
 package ua.vn.iambulance.natifeapp.presenter.ui
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.*
@@ -8,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.*
 import ua.vn.iambulance.natifeapp.data.GiphyRepository
 import ua.vn.iambulance.natifeapp.data.entity.GiphyData
@@ -18,6 +16,7 @@ import ua.vn.iambulance.natifeapp.domain.GetGiphyUseCase
 import ua.vn.iambulance.natifeapp.domain.view_models.MainViewModel
 import ua.vn.iambulance.natifeapp.extension.nonNullObserve
 import ua.vn.iambulance.natifeapp.presenter.GRID_ORIENTATION
+import ua.vn.iambulance.natifeapp.presenter.INTERNET_IS_NOT_AVAILABLE
 import ua.vn.iambulance.natifeapp.presenter.LINEAR_ORIENTATION
 import ua.vn.iambulance.natifeapp.presenter.ui.compose.*
 
@@ -28,39 +27,44 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setDefaultValues()
         setContent {
-            val orientationState = rememberSaveable {
-                mutableStateOf(100)
-            }
             val scope = rememberCoroutineScope()
-
             LaunchedEffect(key1 = Unit) {
                 scope.launch {
                     mainViewModel.getGiphy()
                 }
             }
             val data by mainViewModel.giphyStateFlow.collectAsState()
-
             Column {
+                val listState = rememberSaveable {
+                    mutableStateOf(LINEAR_ORIENTATION)
+                }
                 TopToolbar(
                     title = "Giphy Natife App",
                     onBackClick = { finish() },
                     onGridClick = {
-                        orientationState.value = GRID_ORIENTATION
+                        listState.value = GRID_ORIENTATION
                     },
                     onLinearClick = {
-                        orientationState.value = LINEAR_ORIENTATION
+                        listState.value = LINEAR_ORIENTATION
                     }
                 )
-                GridList(data = data,
-                    state = orientationState,
-                    onDeleteItem = {
+                when(listState.value){
+                    GRID_ORIENTATION -> {
+                        GridList(data = data,
+                            onDeleteItem = {
 
-                    })
-                LinearList(data = data,
-                    state = orientationState,
-                    onDeleteItem = {
+                            })
+                    }
+                    LINEAR_ORIENTATION -> {
+                        LinearList(data = data,
+                            onDeleteItem = {
 
-                    })
+                            })
+                    }
+                    INTERNET_IS_NOT_AVAILABLE -> {
+                        //need implement broadcast receiver
+                    }
+                }
             }
 
         }
