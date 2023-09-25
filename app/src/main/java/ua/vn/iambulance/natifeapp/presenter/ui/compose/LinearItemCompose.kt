@@ -22,21 +22,23 @@ import kotlinx.coroutines.Dispatchers
 @Composable
 fun LinearItem(
     urlImage: String,
+    onItemClick: () -> Unit,
     onDeleteClick: () -> Unit
 ){
     val context = LocalContext.current
     val dispatcher = Dispatchers.IO.limitedParallelism(5)
     Row(
         modifier = Modifier
-            .background(Color.Green)
             .fillMaxWidth()
             .padding(15.dp),
 
         verticalAlignment = Alignment.CenterVertically
     ) {
         SubcomposeAsyncImage(
+
             model = urlImage,
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier.size(100.dp)
+                .weight(10f),
             loading = {
                 Box(
                     modifier = Modifier
@@ -60,12 +62,12 @@ fun LinearItem(
                 .build(),
             contentDescription = null
         )
-        Spacer(modifier = Modifier.width(8.dp).background(color = Color.Blue))
-        Spacer(modifier = Modifier.width(8.dp).background(color = Color.Cyan))
         IconButton(
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier.size(50.dp)
+                .weight(1f)
                 .align(Alignment.CenterVertically),
-            onClick = onDeleteClick
+            onClick = onDeleteClick,
+
         ) {
             Icon(Icons.Filled.Delete, contentDescription = "Delete")
         }

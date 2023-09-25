@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 @Composable
 fun GridItem(
     urlImage: String,
+    onItemClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
     val context = LocalContext.current

@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.*
 import ua.vn.iambulance.natifeapp.data.GiphyRepository
 import ua.vn.iambulance.natifeapp.data.entity.GiphyData
@@ -27,6 +28,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setDefaultValues()
         setContent {
+            val context = LocalContext.current
+            val listState = rememberSaveable {
+                mutableStateOf(LINEAR_ORIENTATION)
+            }
             val scope = rememberCoroutineScope()
             LaunchedEffect(key1 = Unit) {
                 scope.launch {
@@ -35,9 +40,6 @@ class MainActivity : ComponentActivity() {
             }
             val data by mainViewModel.giphyStateFlow.collectAsState()
             Column {
-                val listState = rememberSaveable {
-                    mutableStateOf(LINEAR_ORIENTATION)
-                }
                 TopToolbar(
                     title = "Giphy Natife App",
                     onBackClick = { finish() },
@@ -51,15 +53,24 @@ class MainActivity : ComponentActivity() {
                 when(listState.value){
                     GRID_ORIENTATION -> {
                         GridList(data = data,
+                            onItemClick = {
+//                                FullScreenImage(urlImage = data[it].images.original.url) {
+//
+//                                }
+                            },
                             onDeleteItem = {
 
                             })
                     }
                     LINEAR_ORIENTATION -> {
                         LinearList(data = data,
+                            onItemClick = {
+                                          
+                            },
                             onDeleteItem = {
 
                             })
+                        
                     }
                     INTERNET_IS_NOT_AVAILABLE -> {
                         //need implement broadcast receiver
