@@ -1,6 +1,5 @@
 package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
-import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
@@ -10,9 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
-import coil.ImageLoader
-import coil.compose.SubcomposeAsyncImage
-import coil.decode.*
 
 import kotlinx.coroutines.Dispatchers
 
@@ -22,8 +18,6 @@ fun GridItem(
     onItemClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    val dispatcher = Dispatchers.IO.limitedParallelism(5)
     Card(
         modifier = Modifier.padding(10.dp)
 
@@ -35,43 +29,10 @@ fun GridItem(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .size(200.dp)
-                    .clickable (onClick = onItemClick)
-                    .align(Alignment.CenterHorizontally),
-                model = urlImage,
-                loading = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    ){
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                },
-                imageLoader = ImageLoader.Builder(context)
-                    .dispatcher(dispatcher)
-                    .components {
-                        if (Build.VERSION.SDK_INT >= 28) {
-                            add(ImageDecoderDecoder.Factory())
-                        } else {
-                            add(GifDecoder.Factory())
-                        }
-                    }
-                    .respectCacheHeaders(false)
-                    .build(),
-                contentDescription = null
-            )
-            IconButton(
-                modifier = Modifier
-                    .size(50.dp)
-                    .align(Alignment.CenterHorizontally),
-                onClick = onDeleteClick
-            ) {
-                Icon(Icons.Filled.Delete, contentDescription = "Delete")
-            }
+            SubComposableImageGif(modifier = Modifier
+                .size(200.dp)
+                .clickable(onClick = onItemClick)
+                .align(Alignment.CenterHorizontally), url = urlImage)
         }
     }
 }

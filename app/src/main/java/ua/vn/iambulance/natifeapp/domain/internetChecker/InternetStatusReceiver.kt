@@ -8,22 +8,18 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import ua.vn.iambulance.natifeapp.domain.viewModel.InternetViewModel
 
 
-class InternetStatusReceiver(private val listener: InternetConnectivityListener) : BroadcastReceiver() {
+class InternetStatusReceiver(private val viewModel: InternetViewModel) : BroadcastReceiver() {
 
-    private val _internetStatus: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val internetStatus get() = _internetStatus as StateFlow<Boolean>
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context != null) {
-            if (isInternetAvailable(context)) {
-                listener.onInternetConnectivityChanged(true)
-            } else {
-                listener.onInternetConnectivityChanged(false)
-            }
+            viewModel.setConnectivityStatus(isConnected = isInternetAvailable(context))
         }
     }
+
     private fun isInternetAvailable(context: Context): Boolean {
         var result = false
         val connectivityManager =

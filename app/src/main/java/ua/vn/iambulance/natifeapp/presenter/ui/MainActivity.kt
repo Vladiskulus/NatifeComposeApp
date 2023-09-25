@@ -1,6 +1,5 @@
 package ua.vn.iambulance.natifeapp.presenter.ui
 
-import android.content.Context
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -10,18 +9,15 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.*
-import ua.vn.iambulance.natifeapp.domain.internetChecker.InternetConnectivityListener
 import ua.vn.iambulance.natifeapp.domain.internetChecker.InternetStatusReceiver
 import ua.vn.iambulance.natifeapp.domain.viewModel.InternetViewModel
 
 import ua.vn.iambulance.natifeapp.domain.viewModel.MainViewModel
-import ua.vn.iambulance.natifeapp.extension.*
 import ua.vn.iambulance.natifeapp.presenter.*
 import ua.vn.iambulance.natifeapp.presenter.ui.compose.*
 
-class MainActivity : ComponentActivity(), InternetConnectivityListener {
+class MainActivity : ComponentActivity(){
 
     private lateinit var connectivityReceiver: InternetStatusReceiver
 
@@ -29,11 +25,12 @@ class MainActivity : ComponentActivity(), InternetConnectivityListener {
     private val internetViewModel by viewModels<InternetViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        connectivityReceiver = InternetStatusReceiver(this)
+        connectivityReceiver = InternetStatusReceiver(internetViewModel)
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(connectivityReceiver, filter)
-//        val localDB = getSharedPreferences(USER_DEFAULT, Context.MODE_PRIVATE)
         setContent {
+            val isConnected by internetViewModel.isConnected.collectAsState()
+            val lastScreen by internetViewModel.lastScreen.collectAsState()
             val imagePositionState = rememberSaveable {
                 mutableStateOf(0)
             }
@@ -41,74 +38,93 @@ class MainActivity : ComponentActivity(), InternetConnectivityListener {
                 mutableStateOf(SCREEN_ORIENTATION_OF_LIST_GRID)
             }
             val scope = rememberCoroutineScope()
-            LaunchedEffect(key1 = Unit) {
-                scope.launch {
-                    mainViewModel.getGiphy()
+            LaunchedEffect(isConnected) {
+                if (!isConnected) {
+                    screenState.value = SCREEN_INTERNET_IS_NOT_AVAILABLE
+                } else {
+                    scope.launch {
+                        mainViewModel.getGiphy()
+                    }
+                    screenState.value = lastScreen
                 }
             }
-            val context = LocalContext.current
-            val isConnected by internetViewModel.isConnected.collectAsState()
-            val data by mainViewModel.giphyStateFlow.collectAsState()
-            if (!isConnected){
-                screenState.value = SCREEN_INTERNET_IS_NOT_AVAILABLE
-            }
-            Column {
-                TopToolbar(
-                    title = "Giphy Natife App",
-                    onBackClick = { finish() },
-                    onGridClick = {
-                        screenState.value = SCREEN_ORIENTATION_OF_LIST_GRID
-                        //localDB.put(DB_SCREEN, SCREEN_ORIENTATION_OF_LIST_GRID)
-                    },
-                    onLinearClick = {
-                        screenState.value = SCREEN_ORIENTATION_OF_LIST_LINEAR
-                        //localDB.put(DB_SCREEN, SCREEN_ORIENTATION_OF_LIST_LINEAR)
-                    }
-                )
-                when(screenState.value){
-                    SCREEN_ORIENTATION_OF_LIST_GRID -> {
-                        GridList(data = data,
-                            onItemClick = {
-                                imagePositionState.value = it
-                                screenState.value = SCREEN_IMAGE
-                                //localDB.put(DB_SCREEN, SCREEN_IMAGE)
-                            },
-                            onDeleteItem = {
-                                imagePositionState.value = it
-                            })
-                    }
-                    SCREEN_ORIENTATION_OF_LIST_LINEAR -> {
-                        LinearList(data = data,
-                            onItemClick = {
-                                imagePositionState.value = it
-                                screenState.value = SCREEN_IMAGE
-                                //localDB.put(DB_SCREEN, SCREEN_IMAGE)
-                            },
-                            onDeleteItem = {
-                                imagePositionState.value = it
-                            })
 
-                    }
-                    SCREEN_INTERNET_IS_NOT_AVAILABLE -> {
-                        InternetIsNotAvailable()
-                    }
-                    SCREEN_IMAGE-> {
-                        FullScreenImage(urlImage = data[imagePositionState.value].images.original.url) {
+            val data by mainViewModel.giphyStateFlow.collectAsState()
+            Column {
+                if (isConnected){
+                    when(screenState.value){
+                        SCREEN_ORIENTATION_OF_LIST_GRID -> {
+
+                            TopToolbarWithListSorting(
+                                title = "Giphy Natife App",
+                                onCrossClick = { finish() },
+                                onGridClick = {
+                                    screenState.value = SCREEN_ORIENTATION_OF_LIST_GRID
+                                },
+                                onLinearClick = {
+                                    screenState.value = SCREEN_ORIENTATION_OF_LIST_LINEAR
+                                }
+                            )
+                            GridList(data = data,
+                                onItemClick = {
+                                    imagePositionState.value = it
+                                    screenState.value = SCREEN_IMAGE
+                                },
+                                onDeleteItem = {
+                                    imagePositionState.value = it
+                                })
+                            internetViewModel.setLastScreenAsState(screenState.value)
+                        }
+                        SCREEN_ORIENTATION_OF_LIST_LINEAR -> {
+
+                            TopToolbarWithListSorting(
+                                title = "Giphy Natife App",
+                                onCrossClick = { finish() },
+                                onGridClick = {
+                                    screenState.value = SCREEN_ORIENTATION_OF_LIST_GRID
+                                },
+                                onLinearClick = {
+                                    screenState.value = SCREEN_ORIENTATION_OF_LIST_LINEAR
+                                }
+                            )
+                            LinearList(data = data,
+                                onItemClick = {
+                                    imagePositionState.value = it
+                                    screenState.value = SCREEN_IMAGE
+                                },
+                                onDeleteItem = {
+                                    imagePositionState.value = it
+                                })
+                            internetViewModel.setLastScreenAsState(screenState.value)
 
                         }
-                    }
-                }
-            }
 
+                        SCREEN_IMAGE-> {
+                            val lastS = lastScreen
+                            TopToolbarWithOneButton(
+                                state = screenState.value,
+                                onClick = { screenState.value = lastS }
+                            )
+                            FullScreenImage(urlImage = data[imagePositionState.value].images.original.url) {
+
+                            }
+                            internetViewModel.setLastScreenAsState(screenState.value)
+                        }
+                    }
+                } else {
+                    TopToolbarWithOneButton(
+                        state = screenState.value,
+                        onClick = {}
+                    )
+                    InternetIsNotAvailable()
+                }
+
+            }
         }
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroy() {
+        super.onDestroy()
         unregisterReceiver(connectivityReceiver)
-    }
-
-    override fun onInternetConnectivityChanged(isConnected: Boolean) {
-        internetViewModel.setConnectivityStatus(isConnected)
     }
 }

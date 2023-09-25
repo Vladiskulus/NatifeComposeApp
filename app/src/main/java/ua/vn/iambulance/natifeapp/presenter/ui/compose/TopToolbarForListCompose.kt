@@ -6,15 +6,19 @@ import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
 import ua.vn.iambulance.natifeapp.R
+import ua.vn.iambulance.natifeapp.presenter.SCREEN_IMAGE
+import ua.vn.iambulance.natifeapp.presenter.SCREEN_INTERNET_IS_NOT_AVAILABLE
 import ua.vn.iambulance.natifeapp.presenter.ui.theme.PurpleGrey80
 
 @Composable
-fun TopToolbar(
+fun TopToolbarWithListSorting(
     title: String,
-    onBackClick: () -> Unit,
+    onCrossClick: () -> Unit,
     onGridClick: () -> Unit,
     onLinearClick: () -> Unit
 ) {
@@ -24,55 +28,77 @@ fun TopToolbar(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        IconButton(onClick = onBackClick,
-            modifier = Modifier.align(Alignment.CenterVertically)) {
-            Icon(Icons.Filled.Close, contentDescription = "Back")
-        }
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = title
-        )
+        ButtonClose(click = onCrossClick, modifier = Modifier.align(Alignment.CenterVertically))
+        TextTitle(modifier = Modifier.align(Alignment.CenterVertically), text = title)
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = onGridClick,
-            modifier = Modifier.align(Alignment.CenterVertically)) {
-            Icon(painterResource(id = R.drawable.ic_grid), contentDescription = "Grid")
-        }
-        IconButton(onClick = onLinearClick,
-            modifier = Modifier.align(Alignment.CenterVertically)) {
-            Icon(Icons.Filled.Menu, contentDescription = "Line")
+        ButtonGrid(click = onGridClick, modifier = Modifier.align(Alignment.CenterVertically))
+        ButtonLinear(click = onLinearClick, modifier = Modifier.align(Alignment.CenterVertically))
+    }
+}
+
+@Composable
+fun TopToolbarWithOneButton(onClick: () -> Unit, state: Int) {
+    Row(
+        modifier = Modifier
+            .background(PurpleGrey80)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        when (state) {
+            SCREEN_IMAGE -> {
+                ButtonBack(click = onClick, modifier = Modifier.align(Alignment.CenterVertically))
+            }
+            SCREEN_INTERNET_IS_NOT_AVAILABLE -> {
+                ButtonClose(click = onClick, modifier = Modifier.align(Alignment.CenterVertically))
+            }
         }
     }
 }
 
 @Composable
-private fun ButtonBack(click: () -> Unit, modifier: Modifier){
-    IconButton(onClick = click,
-        modifier = modifier) {
+private fun TextTitle(modifier: Modifier, text: String) {
+    Text(
+        modifier = modifier,
+        text = text
+    )
+}
+
+@Composable
+private fun ButtonBack(click: () -> Unit, modifier: Modifier) {
+    IconButton(
+        onClick = click,
+        modifier = modifier
+    ) {
         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
     }
 }
 
 @Composable
-private fun ButtonClose(click: () -> Unit, modifier: Modifier){
-    IconButton(onClick = click,
-        modifier = modifier) {
+private fun ButtonClose(click: () -> Unit, modifier: Modifier) {
+    IconButton(
+        onClick = click,
+        modifier = modifier
+    ) {
         Icon(Icons.Filled.Close, contentDescription = "Back")
     }
 }
 
 @Composable
-private fun ButtonGrid(modifier: Modifier, click: () -> Unit){
-    IconButton(onClick = click,
-        modifier = modifier) {
+private fun ButtonGrid(click: () -> Unit, modifier: Modifier) {
+    IconButton(
+        onClick = click,
+        modifier = modifier
+    ) {
         Icon(painterResource(id = R.drawable.ic_grid), contentDescription = "Grid")
     }
 }
 
 @Composable
-private fun ButtonLinear(modifier: Modifier, click: () -> Unit){
-    IconButton(onClick = click,
-        modifier = modifier) {
+private fun ButtonLinear(modifier: Modifier, click: () -> Unit) {
+    IconButton(
+        onClick = click,
+        modifier = modifier
+    ) {
         Icon(Icons.Filled.Menu, contentDescription = "Line")
     }
 }
