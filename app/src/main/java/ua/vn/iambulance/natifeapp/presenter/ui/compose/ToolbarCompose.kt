@@ -6,8 +6,6 @@ import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
 import ua.vn.iambulance.natifeapp.R
@@ -52,53 +50,5 @@ fun TopToolbarWithOneButton(onClick: () -> Unit, state: Int) {
                 ButtonClose(click = onClick, modifier = Modifier.align(Alignment.CenterVertically))
             }
         }
-    }
-}
-
-@Composable
-private fun TextTitle(modifier: Modifier, text: String) {
-    Text(
-        modifier = modifier,
-        text = text
-    )
-}
-
-@Composable
-private fun ButtonBack(click: () -> Unit, modifier: Modifier) {
-    IconButton(
-        onClick = click,
-        modifier = modifier
-    ) {
-        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-    }
-}
-
-@Composable
-private fun ButtonClose(click: () -> Unit, modifier: Modifier) {
-    IconButton(
-        onClick = click,
-        modifier = modifier
-    ) {
-        Icon(Icons.Filled.Close, contentDescription = "Back")
-    }
-}
-
-@Composable
-private fun ButtonGrid(click: () -> Unit, modifier: Modifier) {
-    IconButton(
-        onClick = click,
-        modifier = modifier
-    ) {
-        Icon(painterResource(id = R.drawable.ic_grid), contentDescription = "Grid")
-    }
-}
-
-@Composable
-private fun ButtonLinear(modifier: Modifier, click: () -> Unit) {
-    IconButton(
-        onClick = click,
-        modifier = modifier
-    ) {
-        Icon(Icons.Filled.Menu, contentDescription = "Line")
     }
 }
