@@ -1,6 +1,7 @@
 package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
 import android.os.Build
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.Delete
@@ -37,6 +38,7 @@ fun GridItem(
             SubcomposeAsyncImage(
                 modifier = Modifier
                     .size(200.dp)
+                    .clickable (onClick = onItemClick)
                     .align(Alignment.CenterHorizontally),
                 model = urlImage,
                 loading = {

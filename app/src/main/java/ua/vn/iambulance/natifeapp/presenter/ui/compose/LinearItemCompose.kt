@@ -35,10 +35,11 @@ fun LinearItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         SubcomposeAsyncImage(
-
             model = urlImage,
-            modifier = Modifier.size(100.dp)
-                .weight(10f),
+            modifier = Modifier
+                .size(100.dp)
+                .weight(10f)
+                .clickable (onClick = onItemClick),
             loading = {
                 Box(
                     modifier = Modifier
@@ -63,7 +64,8 @@ fun LinearItem(
             contentDescription = null
         )
         IconButton(
-            modifier = Modifier.size(50.dp)
+            modifier = Modifier
+                .size(50.dp)
                 .weight(1f)
                 .align(Alignment.CenterVertically),
             onClick = onDeleteClick,

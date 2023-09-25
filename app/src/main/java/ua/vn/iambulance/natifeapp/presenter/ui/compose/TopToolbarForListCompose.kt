@@ -24,6 +24,7 @@ fun TopToolbar(
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         IconButton(onClick = onBackClick,
             modifier = Modifier.align(Alignment.CenterVertically)) {
             Icon(Icons.Filled.Close, contentDescription = "Back")
@@ -41,5 +42,37 @@ fun TopToolbar(
             modifier = Modifier.align(Alignment.CenterVertically)) {
             Icon(Icons.Filled.Menu, contentDescription = "Line")
         }
+    }
+}
+
+@Composable
+private fun ButtonBack(click: () -> Unit, modifier: Modifier){
+    IconButton(onClick = click,
+        modifier = modifier) {
+        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+    }
+}
+
+@Composable
+private fun ButtonClose(click: () -> Unit, modifier: Modifier){
+    IconButton(onClick = click,
+        modifier = modifier) {
+        Icon(Icons.Filled.Close, contentDescription = "Back")
+    }
+}
+
+@Composable
+private fun ButtonGrid(modifier: Modifier, click: () -> Unit){
+    IconButton(onClick = click,
+        modifier = modifier) {
+        Icon(painterResource(id = R.drawable.ic_grid), contentDescription = "Grid")
+    }
+}
+
+@Composable
+private fun ButtonLinear(modifier: Modifier, click: () -> Unit){
+    IconButton(onClick = click,
+        modifier = modifier) {
+        Icon(Icons.Filled.Menu, contentDescription = "Line")
     }
 }

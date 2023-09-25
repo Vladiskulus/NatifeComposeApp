@@ -3,12 +3,8 @@ package ua.vn.iambulance.natifeapp.presenter.ui.compose
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import ua.vn.iambulance.natifeapp.data.entity.GiphyData
-import ua.vn.iambulance.natifeapp.presenter.LINEAR_ORIENTATION
 
 @Composable
 fun LinearList(

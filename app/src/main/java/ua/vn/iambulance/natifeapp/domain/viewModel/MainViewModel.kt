@@ -1,14 +1,12 @@
-package ua.vn.iambulance.natifeapp.domain.view_models
+package ua.vn.iambulance.natifeapp.domain.viewModel
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ua.vn.iambulance.natifeapp.data.GiphyRepository
 import ua.vn.iambulance.natifeapp.data.entity.GiphyData
-import ua.vn.iambulance.natifeapp.data.entity.GiphyResponse
 import ua.vn.iambulance.natifeapp.data.pagination.PaginationClient
 import ua.vn.iambulance.natifeapp.data.retrofit.RetrofitClient
 import ua.vn.iambulance.natifeapp.domain.GetGiphyUseCase

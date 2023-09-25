@@ -1,5 +1,8 @@
 package ua.vn.iambulance.natifeapp.presenter.ui
 
+import android.content.Context
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.*
@@ -9,28 +12,33 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.*
-import ua.vn.iambulance.natifeapp.data.GiphyRepository
-import ua.vn.iambulance.natifeapp.data.entity.GiphyData
-import ua.vn.iambulance.natifeapp.data.retrofit.RetrofitClient
-import ua.vn.iambulance.natifeapp.domain.GetGiphyUseCase
+import ua.vn.iambulance.natifeapp.domain.internetChecker.InternetConnectivityListener
+import ua.vn.iambulance.natifeapp.domain.internetChecker.InternetStatusReceiver
+import ua.vn.iambulance.natifeapp.domain.viewModel.InternetViewModel
 
-import ua.vn.iambulance.natifeapp.domain.view_models.MainViewModel
-import ua.vn.iambulance.natifeapp.extension.nonNullObserve
-import ua.vn.iambulance.natifeapp.presenter.GRID_ORIENTATION
-import ua.vn.iambulance.natifeapp.presenter.INTERNET_IS_NOT_AVAILABLE
-import ua.vn.iambulance.natifeapp.presenter.LINEAR_ORIENTATION
+import ua.vn.iambulance.natifeapp.domain.viewModel.MainViewModel
+import ua.vn.iambulance.natifeapp.extension.*
+import ua.vn.iambulance.natifeapp.presenter.*
 import ua.vn.iambulance.natifeapp.presenter.ui.compose.*
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), InternetConnectivityListener {
+
+    private lateinit var connectivityReceiver: InternetStatusReceiver
 
     private val mainViewModel by viewModels<MainViewModel>()
+    private val internetViewModel by viewModels<InternetViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setDefaultValues()
+        connectivityReceiver = InternetStatusReceiver(this)
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(connectivityReceiver, filter)
+//        val localDB = getSharedPreferences(USER_DEFAULT, Context.MODE_PRIVATE)
         setContent {
-            val context = LocalContext.current
-            val listState = rememberSaveable {
-                mutableStateOf(LINEAR_ORIENTATION)
+            val imagePositionState = rememberSaveable {
+                mutableStateOf(0)
+            }
+            val screenState = rememberSaveable {
+                mutableStateOf(SCREEN_ORIENTATION_OF_LIST_GRID)
             }
             val scope = rememberCoroutineScope()
             LaunchedEffect(key1 = Unit) {
@@ -38,42 +46,56 @@ class MainActivity : ComponentActivity() {
                     mainViewModel.getGiphy()
                 }
             }
+            val context = LocalContext.current
+            val isConnected by internetViewModel.isConnected.collectAsState()
             val data by mainViewModel.giphyStateFlow.collectAsState()
+            if (!isConnected){
+                screenState.value = SCREEN_INTERNET_IS_NOT_AVAILABLE
+            }
             Column {
                 TopToolbar(
                     title = "Giphy Natife App",
                     onBackClick = { finish() },
                     onGridClick = {
-                        listState.value = GRID_ORIENTATION
+                        screenState.value = SCREEN_ORIENTATION_OF_LIST_GRID
+                        //localDB.put(DB_SCREEN, SCREEN_ORIENTATION_OF_LIST_GRID)
                     },
                     onLinearClick = {
-                        listState.value = LINEAR_ORIENTATION
+                        screenState.value = SCREEN_ORIENTATION_OF_LIST_LINEAR
+                        //localDB.put(DB_SCREEN, SCREEN_ORIENTATION_OF_LIST_LINEAR)
                     }
                 )
-                when(listState.value){
-                    GRID_ORIENTATION -> {
+                when(screenState.value){
+                    SCREEN_ORIENTATION_OF_LIST_GRID -> {
                         GridList(data = data,
                             onItemClick = {
-//                                FullScreenImage(urlImage = data[it].images.original.url) {
-//
-//                                }
+                                imagePositionState.value = it
+                                screenState.value = SCREEN_IMAGE
+                                //localDB.put(DB_SCREEN, SCREEN_IMAGE)
                             },
                             onDeleteItem = {
-
+                                imagePositionState.value = it
                             })
                     }
-                    LINEAR_ORIENTATION -> {
+                    SCREEN_ORIENTATION_OF_LIST_LINEAR -> {
                         LinearList(data = data,
                             onItemClick = {
-                                          
+                                imagePositionState.value = it
+                                screenState.value = SCREEN_IMAGE
+                                //localDB.put(DB_SCREEN, SCREEN_IMAGE)
                             },
                             onDeleteItem = {
-
+                                imagePositionState.value = it
                             })
-                        
+
                     }
-                    INTERNET_IS_NOT_AVAILABLE -> {
-                        //need implement broadcast receiver
+                    SCREEN_INTERNET_IS_NOT_AVAILABLE -> {
+                        InternetIsNotAvailable()
+                    }
+                    SCREEN_IMAGE-> {
+                        FullScreenImage(urlImage = data[imagePositionState.value].images.original.url) {
+
+                        }
                     }
                 }
             }
@@ -81,16 +103,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun setDefaultValues() {
-        val postRepository = GiphyRepository(RetrofitClient().apiService)
-        val getGiphyUseCase = GetGiphyUseCase(postRepository)
-
-        //mainViewModel = ViewModelProvider(this)[MainViewModel(getPostsUseCase)::class.java]
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(connectivityReceiver)
     }
 
-    private fun setViewModelCallback(dataState: MutableState<List<GiphyData>>, offset: Int = 0) {
-        mainViewModel.gifsLiveData.nonNullObserve(this) {
-            dataState.value = it
-        }
+    override fun onInternetConnectivityChanged(isConnected: Boolean) {
+        internetViewModel.setConnectivityStatus(isConnected)
     }
 }
