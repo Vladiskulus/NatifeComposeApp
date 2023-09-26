@@ -9,8 +9,7 @@ import ua.vn.iambulance.natifeapp.data.entity.GiphyData
 @Composable
 fun LinearList(
     data: List<GiphyData>,
-    onItemClick: (Int) -> Unit,
-    onDeleteItem: (Int) -> Unit
+    onItemClick: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
@@ -18,7 +17,6 @@ fun LinearList(
         itemsIndexed(data) { index, item ->
             LinearItem(
                 urlImage = item.images.original.url,
-                onDeleteClick = { onDeleteItem(index) },
                 onItemClick = { onItemClick(index) }
             )
         }

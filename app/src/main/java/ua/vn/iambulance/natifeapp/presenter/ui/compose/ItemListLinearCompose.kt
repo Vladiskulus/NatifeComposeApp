@@ -10,8 +10,7 @@ import androidx.compose.ui.unit.*
 @Composable
 fun LinearItem(
     urlImage: String,
-    onItemClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onItemClick: () -> Unit
 ){
     Row(
         modifier = Modifier

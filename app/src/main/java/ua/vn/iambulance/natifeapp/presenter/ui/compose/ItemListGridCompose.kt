@@ -10,8 +10,7 @@ import androidx.compose.ui.unit.*
 @Composable
 fun GridItem(
     urlImage: String,
-    onItemClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onItemClick: () -> Unit
 ) {
     Card(
         modifier = Modifier.padding(10.dp)

@@ -11,8 +11,7 @@ import ua.vn.iambulance.natifeapp.data.entity.*
 fun GridList(
     data: List<GiphyData>,
     columns: Int = 2,
-    onItemClick: (Int) -> Unit,
-    onDeleteItem: (Int) -> Unit
+    onItemClick: (Int) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
@@ -22,7 +21,6 @@ fun GridList(
         itemsIndexed(data) { index, item ->
             GridItem(
                 urlImage = item.images.original.url,
-                onDeleteClick = { onDeleteItem(index) },
                 onItemClick = { onItemClick(index) }
             )
         }

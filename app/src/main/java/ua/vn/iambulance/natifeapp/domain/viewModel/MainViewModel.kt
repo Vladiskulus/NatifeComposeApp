@@ -1,17 +1,18 @@
 package ua.vn.iambulance.natifeapp.domain.viewModel
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import ua.vn.iambulance.natifeapp.data.GiphyRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import ua.vn.iambulance.natifeapp.data.entity.GiphyData
-import ua.vn.iambulance.natifeapp.data.retrofit.RetrofitClient
 import ua.vn.iambulance.natifeapp.domain.GetGiphyUseCase
+import javax.inject.Inject
 
-class MainViewModel: ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val getGiphyUseCase: GetGiphyUseCase): ViewModel() {
 
-    private val getGiphyUseCase: GetGiphyUseCase = GetGiphyUseCase(GiphyRepository(RetrofitClient().apiService))
-    val gifsLiveData: MutableLiveData<List<GiphyData>> = MutableLiveData()
+
+    private val _gifsLiveData: MutableLiveData<List<GiphyData>> = MutableLiveData()
+    val gifsLiveData get() = _gifsLiveData as LiveData<List<GiphyData>>
 
     private val _giphyStateFlow = MutableStateFlow(emptyList<GiphyData>())
     val giphyStateFlow get() = _giphyStateFlow as StateFlow<List<GiphyData>>
@@ -22,5 +23,6 @@ class MainViewModel: ViewModel() {
     suspend fun getGiphy(){
         _giphyStateFlow.value = getGiphyUseCase()
     }
+
 
 }

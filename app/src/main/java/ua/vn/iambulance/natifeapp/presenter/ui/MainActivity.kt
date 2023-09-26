@@ -9,6 +9,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import ua.vn.iambulance.natifeapp.domain.internetChecker.InternetStatusReceiver
 import ua.vn.iambulance.natifeapp.domain.viewModel.InternetViewModel
@@ -17,11 +20,11 @@ import ua.vn.iambulance.natifeapp.domain.viewModel.MainViewModel
 import ua.vn.iambulance.natifeapp.presenter.*
 import ua.vn.iambulance.natifeapp.presenter.ui.compose.*
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity(){
 
     private lateinit var connectivityReceiver: InternetStatusReceiver
 
-    private val mainViewModel by viewModels<MainViewModel>()
     private val internetViewModel by viewModels<InternetViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,91 +32,91 @@ class MainActivity : ComponentActivity(){
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(connectivityReceiver, filter)
         setContent {
-            val isConnected by internetViewModel.isConnected.collectAsState()
-            val lastScreen by internetViewModel.lastScreen.collectAsState()
-            val imagePositionState = rememberSaveable {
-                mutableStateOf(0)
-            }
-            val screenState = rememberSaveable {
-                mutableStateOf(SCREEN_ORIENTATION_OF_LIST_GRID)
-            }
-            val scope = rememberCoroutineScope()
-            LaunchedEffect(isConnected) {
-                if (!isConnected) {
-                    screenState.value = SCREEN_INTERNET_IS_NOT_AVAILABLE
-                } else {
-                    scope.launch {
-                        mainViewModel.getGiphy()
-                    }
-                    screenState.value = lastScreen
+           MainScreen()
+        }
+    }
+
+    @Composable
+    fun MainScreen(){
+        val mainViewModel = hiltViewModel<MainViewModel>()
+        val isConnected by internetViewModel.isConnected.collectAsState()
+        val lastScreen by internetViewModel.lastScreen.collectAsState()
+        val imagePositionState = rememberSaveable {
+            mutableStateOf(0)
+        }
+        val screenState = rememberSaveable {
+            mutableStateOf(SCREEN_ORIENTATION_OF_LIST_GRID)
+        }
+        val scope = rememberCoroutineScope()
+        LaunchedEffect(isConnected) {
+            if (!isConnected) {
+                screenState.value = SCREEN_INTERNET_IS_NOT_AVAILABLE
+            } else {
+                scope.launch {
+                    mainViewModel.getGiphy()
                 }
+                screenState.value = lastScreen
             }
+        }
 
-            val data by mainViewModel.giphyStateFlow.collectAsState()
-            Column {
-                if (isConnected){
-                    when(screenState.value){
-                        SCREEN_ORIENTATION_OF_LIST_GRID -> {
-
-                            TopToolbarWithListSorting(
-                                title = "Giphy Natife App",
-                                onCrossClick = { finish() },
-                                onGridClick = {
-                                    screenState.value = SCREEN_ORIENTATION_OF_LIST_GRID
-                                },
-                                onLinearClick = {
-                                    screenState.value = SCREEN_ORIENTATION_OF_LIST_LINEAR
-                                }
-                            )
-                            GridList(data = data,
-                                onItemClick = {
-                                    imagePositionState.value = it
-                                    screenState.value = SCREEN_IMAGE
-                                },
-                                onDeleteItem = {
-                                    imagePositionState.value = it
-                                })
-                            internetViewModel.setLastScreenAsState(screenState.value)
-                        }
-                        SCREEN_ORIENTATION_OF_LIST_LINEAR -> {
-
-                            TopToolbarWithListSorting(
-                                title = "Giphy Natife App",
-                                onCrossClick = { finish() },
-                                onGridClick = {
-                                    screenState.value = SCREEN_ORIENTATION_OF_LIST_GRID
-                                },
-                                onLinearClick = {
-                                    screenState.value = SCREEN_ORIENTATION_OF_LIST_LINEAR
-                                }
-                            )
-                            LinearList(data = data,
-                                onItemClick = {
-                                    imagePositionState.value = it
-                                    screenState.value = SCREEN_IMAGE
-                                },
-                                onDeleteItem = {
-                                    imagePositionState.value = it
-                                })
-                            internetViewModel.setLastScreenAsState(screenState.value)
-
-                        }
-
-                        SCREEN_IMAGE-> {
-                            TopToolbarWithOneButton(
-                                state = screenState.value,
-                                onClick = { screenState.value = lastScreen }
-                            )
-                            FullScreenImage(urlImage = data[imagePositionState.value].images.original.url)
-                        }
+        val data by mainViewModel.giphyStateFlow.collectAsState()
+        Column {
+            if (isConnected){
+                when(screenState.value){
+                    SCREEN_ORIENTATION_OF_LIST_GRID -> {
+                        TopToolbarWithListSorting(
+                            title = "Giphy Natife App",
+                            onCrossClick = { finish() },
+                            onGridClick = {
+                                screenState.value = SCREEN_ORIENTATION_OF_LIST_GRID
+                            },
+                            onLinearClick = {
+                                screenState.value = SCREEN_ORIENTATION_OF_LIST_LINEAR
+                            }
+                        )
+                        GridList(data = data,
+                            onItemClick = {
+                                imagePositionState.value = it
+                                screenState.value = SCREEN_IMAGE
+                            }
+                        )
+                        internetViewModel.setLastScreenAsState(screenState.value)
                     }
-                } else {
-                    TopToolbarWithOneButton(
-                        state = screenState.value,
-                        onClick = {}
-                    )
-                    InternetIsNotAvailable()
+                    SCREEN_ORIENTATION_OF_LIST_LINEAR -> {
+
+                        TopToolbarWithListSorting(
+                            title = "Giphy Natife App",
+                            onCrossClick = { finish() },
+                            onGridClick = {
+                                screenState.value = SCREEN_ORIENTATION_OF_LIST_GRID
+                            },
+                            onLinearClick = {
+                                screenState.value = SCREEN_ORIENTATION_OF_LIST_LINEAR
+                            }
+                        )
+                        LinearList(data = data,
+                            onItemClick = {
+                                imagePositionState.value = it
+                                screenState.value = SCREEN_IMAGE
+                            })
+                        internetViewModel.setLastScreenAsState(screenState.value)
+
+                    }
+
+                    SCREEN_IMAGE-> {
+                        TopToolbarWithOneButton(
+                            state = screenState.value,
+                            onClick = { screenState.value = lastScreen }
+                        )
+                        FullScreenImage(urlImage = data[imagePositionState.value].images.original.url)
+                    }
                 }
+            } else {
+                TopToolbarWithOneButton(
+                    state = screenState.value,
+                    onClick = {}
+                )
+                InternetIsNotAvailable()
             }
         }
     }
