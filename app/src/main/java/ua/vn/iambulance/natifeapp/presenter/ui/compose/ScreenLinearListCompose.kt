@@ -4,20 +4,25 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import ua.vn.iambulance.natifeapp.data.entity.GiphyData
+import ua.vn.iambulance.natifeapp.domain.viewModel.MainViewModel
 
 @Composable
 fun LinearList(
-    data: List<GiphyData>,
-    onItemClick: (Int) -> Unit
+    onItemClick: (String) -> Unit
 ) {
+    val mainViewModel = hiltViewModel<MainViewModel>()
+    val data = mainViewModel.getTrendingGiphy().collectAsLazyPagingItems()
     LazyColumn(
         modifier = Modifier.fillMaxWidth()
     ) {
-        itemsIndexed(data) { index, item ->
+        items(data.itemSnapshotList) {  item ->
             LinearItem(
-                urlImage = item.images.original.url,
-                onItemClick = { onItemClick(index) }
+                urlImage = item?.images?.original?.url!!,
+                onItemClick = { onItemClick(item.images.original.url) }
             )
         }
     }
