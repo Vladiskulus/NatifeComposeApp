@@ -7,7 +7,7 @@ const val TAGS = "tags"
 const val TRENDING = "trending"
 const val SEARCH = "search"
 
-const val LIMIT = 50
+const val LIMIT = 10
 
 const val OFFSET = "offset="
 const val REQUEST = "q="

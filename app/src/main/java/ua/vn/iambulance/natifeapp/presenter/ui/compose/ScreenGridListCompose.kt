@@ -29,10 +29,58 @@ fun GridList(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(data.itemSnapshotList) {  item ->
-            GridItem(
-                urlImage = item?.images?.original?.url!!,
-                onItemClick = { onItemClick(item.images.original.url) }
-            )
+            val url = item?.images?.original?.url
+            if (url != null){
+                GridItem(
+                    urlImage = url,
+                    onItemClick = { onItemClick(url) }
+                )
+            }
+        }
+        when (val state = data.loadState.refresh) { //FIRST LOAD
+            is LoadState.Error -> {
+                //TODO Error Item
+                //state.error to get error message
+            }
+            is LoadState.Loading -> { // Loading UI
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(8.dp),
+                            text = "Refresh Loading"
+                        )
+                        CircularProgressIndicator(color = Color.Black)
+                    }
+                }
+            }
+            else -> {}
+        }
+        when (val state = data.loadState.append) { // Pagination
+            is LoadState.Error -> {
+                //TODO Pagination Error Item
+                //state.error to get error message
+            }
+            is LoadState.Loading -> { // Pagination Loading UI
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Text(text = "Pagination Loading")
+
+                        CircularProgressIndicator(color = Color.Black)
+                    }
+                }
+            }
+            else -> {}
         }
     }
 }

@@ -1,5 +1,6 @@
 package ua.vn.iambulance.natifeapp.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ua.vn.iambulance.natifeapp.data.API_KEY
@@ -10,7 +11,8 @@ import ua.vn.iambulance.natifeapp.data.retrofit.ApiService
 
 class GiphyPagingSource(private val apiService: ApiService):PagingSource<Int, GiphyData>() {
     override fun getRefreshKey(state: PagingState<Int, GiphyData>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
+        return state.anchorPosition
+            ?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
@@ -20,7 +22,7 @@ class GiphyPagingSource(private val apiService: ApiService):PagingSource<Int, Gi
         return try {
             val page = params.key ?: 1
             val response = apiService.getTrendingGifs(API_KEY, LIMIT, page * LIMIT, REQUEST, "messaging_non_clips")
-
+            Log.d("RESPONSE","$page and ${page * LIMIT}" )
             LoadResult.Page(
                 data = response.data,
                 prevKey = if (page == 1) null else page.minus(1),
