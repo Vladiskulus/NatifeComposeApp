@@ -1,18 +1,11 @@
 package ua.vn.iambulance.natifeapp.domain.internetChecker
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
+import android.content.*
+import android.net.*
 import android.os.Build
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import ua.vn.iambulance.natifeapp.domain.viewModel.InternetViewModel
+import ua.vn.iambulance.natifeapp.domain.viewModel.ScreenStatusViewModel
 
-
-class InternetStatusReceiver(private val viewModel: InternetViewModel) : BroadcastReceiver() {
-
+class InternetStatusReceiver(private val viewModel: ScreenStatusViewModel) : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context != null) {

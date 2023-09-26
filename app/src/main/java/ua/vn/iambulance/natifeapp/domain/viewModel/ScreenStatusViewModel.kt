@@ -1,11 +1,10 @@
 package ua.vn.iambulance.natifeapp.domain.viewModel
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import ua.vn.iambulance.natifeapp.presenter.SCREEN_ORIENTATION_OF_LIST_GRID
 
-class InternetViewModel: ViewModel() {
+class ScreenStatusViewModel: ViewModel() {
 
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected

@@ -2,16 +2,10 @@ package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
-import androidx.compose.ui.res.*
-import ua.vn.iambulance.natifeapp.R
-import ua.vn.iambulance.natifeapp.presenter.SCREEN_IMAGE
-import ua.vn.iambulance.natifeapp.presenter.SCREEN_INTERNET_IS_NOT_AVAILABLE
-import ua.vn.iambulance.natifeapp.presenter.ui.theme.PurpleGrey80
+import androidx.compose.ui.graphics.Color
+import ua.vn.iambulance.natifeapp.presenter.*
 
 @Composable
 fun TopToolbarWithListSorting(
@@ -22,7 +16,7 @@ fun TopToolbarWithListSorting(
 ) {
     Row(
         modifier = Modifier
-            .background(PurpleGrey80)
+            .background(Color.Green)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -38,7 +32,7 @@ fun TopToolbarWithListSorting(
 fun TopToolbarWithOneButton(onClick: () -> Unit, state: Int) {
     Row(
         modifier = Modifier
-            .background(PurpleGrey80)
+            .background(Color.Green)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -1,6 +1,5 @@
 package ua.vn.iambulance.natifeapp.presenter.ui.compose
 
-
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -24,4 +23,3 @@ fun LinearItem(
             .clickable(onClick = onItemClick), url = urlImage)
     }
 }
-
