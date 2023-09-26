@@ -6,9 +6,8 @@ import androidx.compose.ui.*
 
 @Composable
 fun FullScreenImage(
-    urlImage: String,
-    onDeleteClick: () -> Unit
-) {
+    urlImage: String)
+{
     Box(
         modifier = Modifier.fillMaxSize()
     ) {

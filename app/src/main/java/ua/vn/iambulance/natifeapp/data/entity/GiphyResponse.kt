@@ -5,6 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class GiphyResponse(
-    val data: List<GiphyData>,
-    val pagination: GiphyPagination
+    val data: List<GiphyData>
 ): Parcelable

@@ -100,15 +100,11 @@ class MainActivity : ComponentActivity(){
                         }
 
                         SCREEN_IMAGE-> {
-                            val lastS = lastScreen
                             TopToolbarWithOneButton(
                                 state = screenState.value,
-                                onClick = { screenState.value = lastS }
+                                onClick = { screenState.value = lastScreen }
                             )
-                            FullScreenImage(urlImage = data[imagePositionState.value].images.original.url) {
-
-                            }
-                            internetViewModel.setLastScreenAsState(screenState.value)
+                            FullScreenImage(urlImage = data[imagePositionState.value].images.original.url)
                         }
                     }
                 } else {
@@ -118,7 +114,6 @@ class MainActivity : ComponentActivity(){
                     )
                     InternetIsNotAvailable()
                 }
-
             }
         }
     }
